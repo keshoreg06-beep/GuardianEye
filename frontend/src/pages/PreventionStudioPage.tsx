@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import {
   ArrowRight,
-  CheckCircle2,
-  Cpu,
-  Layers,
   Lightbulb,
   Percent,
   Play,
