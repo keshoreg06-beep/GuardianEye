@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
   Bell,
   CheckCircle,
+  Command,
   Search,
   Sparkles,
   Terminal,
+  Wifi,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/auth';
 
@@ -14,6 +16,10 @@ interface HeaderProps {
   onOpenAlertsModal: () => void;
   user: AuthUser | null;
   onLogout: () => void;
+  currentPage: string;
+  connectionState?: 'LIVE' | 'DEGRADED' | 'RECONNECTING' | 'OFFLINE';
+  onOpenCommandPalette: () => void;
+  sidebarCollapsed: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -22,6 +28,10 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAlertsModal,
   user,
   onLogout,
+  currentPage,
+  connectionState = 'LIVE',
+  onOpenCommandPalette,
+  sidebarCollapsed,
 }) => {
   const [timeStr, setTimeStr] = useState<string>('');
 
@@ -42,34 +52,59 @@ export const Header: React.FC<HeaderProps> = ({
     return () => clearInterval(interval);
   }, []);
 
+  const liveStatusColors = {
+    LIVE: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+    DEGRADED: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
+    RECONNECTING: 'bg-sky-500/10 border-sky-500/20 text-sky-400',
+    OFFLINE: 'bg-red-500/10 border-red-500/20 text-red-400',
+  };
+
   return (
-    <header className="h-16 bg-[#0B0F17]/90 backdrop-blur-md border-b border-white/10 px-8 flex items-center justify-between fixed top-0 right-0 left-64 z-20">
-      <div className="flex items-center gap-4 w-96">
-        <div className="relative w-full">
-          <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search SKUs, incident codes, zone tags, tracks..."
-            className="w-full bg-[#111827] border border-white/10 rounded-lg pl-9 pr-4 py-1.5 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors"
-          />
+    <header
+      className="h-16 bg-[#0B0F17]/90 backdrop-blur-md border-b border-white/10 px-4 md:px-8 flex items-center justify-between fixed top-0 right-0 z-20 transition-all duration-200"
+      style={{ left: sidebarCollapsed ? '5rem' : '16rem' }}
+    >
+      <div className="flex items-center gap-4 min-w-0">
+        <div className="min-w-0">
+          <div className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Workspace</div>
+          <div className="text-sm font-medium text-white truncate">{currentPage}</div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
+        <div className="relative hidden md:block w-80 xl:w-96">
+          <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <button
+            type="button"
+            onClick={onOpenCommandPalette}
+            className="w-full bg-[#111827] border border-white/10 rounded-lg pl-9 pr-10 py-1.5 text-left text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+          >
+            Search incidents, cameras, alerts, evidence...
+          </button>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] font-mono text-gray-400">
+            Ctrl+K
+          </span>
+        </div>
+
         <div className="font-mono text-xs text-gray-400 bg-black/40 border border-white/5 px-3 py-1.5 rounded-lg flex items-center gap-2">
           <Terminal className="w-3.5 h-3.5 text-blue-400" />
           <span>{timeStr}</span>
         </div>
 
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono ${liveStatusColors[connectionState]}`}>
+          <Wifi className="w-3.5 h-3.5" />
+          <span>{connectionState}</span>
+        </div>
+
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
           <CheckCircle className="w-3.5 h-3.5" />
-          <span>ZERO DRIFT DETECTED</span>
+          <span>ZERO DRIFT</span>
         </div>
 
         {user ? (
-          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200">
+          <div className="hidden sm:flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200">
             <span className="font-medium text-white">{user.full_name}</span>
-            <span className="ml-2 text-slate-400">{user.role?.name ?? 'Operator'}</span>
+            <span className="text-slate-400">{user.role?.name ?? 'Operator'}</span>
           </div>
         ) : null}
 
@@ -83,6 +118,14 @@ export const Header: React.FC<HeaderProps> = ({
               {openAlertsCount}
             </span>
           )}
+        </button>
+
+        <button
+          onClick={onOpenCommandPalette}
+          className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600/20 border border-blue-500/40 text-blue-400 text-xs font-medium hover:bg-blue-600/30 transition-all"
+        >
+          <Command className="w-3.5 h-3.5" />
+          <span>Command</span>
         </button>
 
         <button
