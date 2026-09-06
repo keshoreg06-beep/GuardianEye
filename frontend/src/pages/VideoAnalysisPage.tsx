@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Activity,
-  CheckCircle,
-  Clock,
   Cpu,
   FileVideo,
   Layers,
