@@ -9,9 +9,12 @@ import axios from 'axios';
 import {
   AlertItem,
   AssistantQueryResponse,
+  BehaviourEventResponse,
   DashboardSummary,
   DigitalTwinTopology,
   IncidentItem,
+  TrajectorySummaryResponse,
+  VideoResponse,
 } from '../types';
 
 const apiClient = axios.create({
@@ -22,6 +25,21 @@ const apiClient = axios.create({
 export const GuardianAPI = {
   async getDashboardSummary(): Promise<DashboardSummary> {
     const res = await apiClient.get<DashboardSummary>('/analytics/dashboard');
+    return res.data;
+  },
+
+  async getVideos(): Promise<VideoResponse[]> {
+    const res = await apiClient.get<VideoResponse[]>('/videos');
+    return res.data;
+  },
+
+  async getVideoTracks(videoId: string): Promise<TrajectorySummaryResponse> {
+    const res = await apiClient.get<TrajectorySummaryResponse>(`/tracks/${videoId}`);
+    return res.data;
+  },
+
+  async getBehavioursForVideo(videoId: string): Promise<BehaviourEventResponse[]> {
+    const res = await apiClient.get<BehaviourEventResponse[]>(`/behaviours/video/${videoId}`);
     return res.data;
   },
 

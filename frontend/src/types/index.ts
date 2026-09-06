@@ -4,6 +4,21 @@
 
 export type SeverityLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
+export interface ProcessingJobRecord {
+  id: string;
+  video_id: string;
+  job_status: string;
+  progress_percentage: number;
+  frames_processed: number;
+  total_frames: number;
+  inference_fps_achieved: number;
+  processing_time_seconds: number;
+  error_message?: string;
+  started_at?: string;
+  completed_at?: string;
+  created_at: string;
+}
+
 export interface VideoItem {
   id: string;
   filename: string;
@@ -17,6 +32,72 @@ export interface VideoItem {
   checksum_sha256: string;
   status: 'QUEUED' | 'PROCESSING' | 'PROCESSED' | 'FAILED';
   created_at: string;
+}
+
+export interface VideoResponse extends VideoItem {
+  camera_id?: string;
+  updated_at: string;
+  processing_jobs: ProcessingJobRecord[];
+}
+
+export interface TrackPointResponse {
+  frame_number: number;
+  timestamp_seconds: number;
+  bbox_xyxy: [number, number, number, number];
+  centroid_xy: [number, number];
+  velocity_xy: [number, number];
+  confidence: number;
+  zone_id?: string;
+}
+
+export interface TrackResponse {
+  id: string;
+  video_id: string;
+  track_id: number;
+  class_name: string;
+  confidence: number;
+  first_frame: number;
+  last_frame: number;
+  duration_seconds: number;
+  max_velocity: number;
+  trajectory_points: TrackPointResponse[];
+}
+
+export interface TrajectorySummaryResponse {
+  video_id: string;
+  total_tracks: number;
+  tracks: TrackResponse[];
+}
+
+export interface BehaviourEvidenceResponse {
+  trigger_rule: string;
+  primary_entity_id: number;
+  primary_class: string;
+  secondary_entity_id?: number;
+  secondary_class?: string;
+  peak_velocity_px_s?: number;
+  impact_deceleration?: number;
+  fall_height_px?: number;
+  duration_seconds?: number;
+  zone_code?: string;
+  spatial_overlap_iou?: number;
+  metrics?: Record<string, unknown>;
+}
+
+export interface BehaviourEventResponse {
+  id?: string;
+  video_id?: string;
+  behaviour_type: string;
+  severity: string;
+  start_frame: number;
+  end_frame: number;
+  start_time_seconds: number;
+  end_time_seconds: number;
+  duration_seconds: number;
+  confidence: number;
+  description: string;
+  evidence?: BehaviourEvidenceResponse;
+  keyframe_indices: number[];
 }
 
 export interface DetectedBox {
