@@ -149,6 +149,28 @@ export interface AlertItem {
   created_at: string;
 }
 
+export interface EvidencePackageItem {
+  id: string;
+  incident_id: string;
+  snapshot_path: string;
+  clip_path: string;
+  pre_event_seconds: number;
+  post_event_seconds: number;
+  sha256_checksum: string;
+  overlay_data: string;
+}
+
+export interface IncidentReplayItem {
+  incident_id: string;
+  video_id: string;
+  behaviour_code: string;
+  clip_url: string;
+  snapshot_url: string;
+  sha256_checksum: string;
+  duration_seconds: number;
+  keyframes: ReplayKeyframe[];
+}
+
 export interface HeatmapPoint {
   x_normalized: number;
   y_normalized: number;

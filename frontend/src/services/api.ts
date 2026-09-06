@@ -12,7 +12,9 @@ import {
   BehaviourEventResponse,
   DashboardSummary,
   DigitalTwinTopology,
+  EvidencePackageItem,
   IncidentItem,
+  IncidentReplayItem,
   TrajectorySummaryResponse,
   VideoResponse,
 } from '../types';
@@ -45,6 +47,16 @@ export const GuardianAPI = {
 
   async getIncidents(): Promise<IncidentItem[]> {
     const res = await apiClient.get<IncidentItem[]>('/incidents');
+    return res.data;
+  },
+
+  async getEvidenceForIncident(incidentId: string): Promise<EvidencePackageItem> {
+    const res = await apiClient.get<EvidencePackageItem>(`/evidence/incident/${incidentId}`);
+    return res.data;
+  },
+
+  async getIncidentReplay(incidentId: string): Promise<IncidentReplayItem> {
+    const res = await apiClient.get<IncidentReplayItem>(`/replay/${incidentId}`);
     return res.data;
   },
 
