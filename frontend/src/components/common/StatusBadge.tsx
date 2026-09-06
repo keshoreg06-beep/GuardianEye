@@ -19,12 +19,19 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ level, size = 'sm' }) 
         return 'bg-amber-500/20 text-amber-400 border-amber-500/40 glow-medium';
       case 'LOW':
         return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 glow-low';
-      case 'RESOLVED':
+      case 'OPEN':
+      case 'DETECTED':
+        return 'bg-sky-500/20 text-sky-300 border-sky-500/40';
+      case 'ACKNOWLEDGED':
       case 'CONFIRMED':
+      case 'RESOLVED':
         return 'bg-blue-500/20 text-blue-400 border-blue-500/40';
       case 'UNDER_REVIEW':
       case 'ALERTED':
+      case 'REJECTED':
         return 'bg-purple-500/20 text-purple-400 border-purple-500/40';
+      case 'ACTION_TAKEN':
+        return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
       default:
         return 'bg-gray-500/20 text-gray-300 border-gray-500/40';
     }

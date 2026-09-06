@@ -48,14 +48,25 @@ export const GuardianAPI = {
     return res.data;
   },
 
+  async updateIncidentStatus(payload: {
+    incident_id: string;
+    new_status: string;
+    change_reason: string;
+    assigned_to?: string;
+    resolution_notes?: string;
+  }): Promise<IncidentItem> {
+    const res = await apiClient.post<IncidentItem>('/incidents/status', payload);
+    return res.data;
+  },
+
   async getAlerts(): Promise<AlertItem[]> {
     const res = await apiClient.get<AlertItem[]>('/alerts');
     return res.data;
   },
 
-  async acknowledgeAlert(alertId: string): Promise<boolean> {
-    await apiClient.post('/alerts/acknowledge', { alert_id: alertId });
-    return true;
+  async acknowledgeAlert(alertId: string): Promise<AlertItem> {
+    const res = await apiClient.post<AlertItem>('/alerts/acknowledge', { alert_id: alertId });
+    return res.data;
   },
 
   async getDigitalTwinTopology(): Promise<DigitalTwinTopology> {
