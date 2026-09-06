@@ -13,6 +13,7 @@ import {
   Shield,
   Sliders,
   Sparkles,
+  TrendingUp,
 } from 'lucide-react';
 import type { AuthUser } from '../../types/auth';
 
@@ -40,6 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { to: '/', label: 'Overview', icon: LayoutDashboard },
     { to: '/live', label: 'Live Streams', icon: Camera },
     { to: '/analysis', label: 'Video Intelligence', icon: PlayCircle },
+    { to: '/analytics', label: 'Analytics', icon: TrendingUp },
     { to: '/incidents', label: 'Incident Board', icon: AlertTriangle, badge: alertCount },
     { to: '/evidence', label: 'Evidence Vault', icon: FileCheck },
     { to: '/prevention', label: 'Prevention Studio', icon: Sliders },
