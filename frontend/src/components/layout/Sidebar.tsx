@@ -1,28 +1,29 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Activity,
   AlertTriangle,
-  Boxes,
   Camera,
-  Cpu,
   Dna,
   FileCheck,
   LayoutDashboard,
-  Layers,
   MapPin,
   PlayCircle,
   Shield,
   Sliders,
   Sparkles,
 } from 'lucide-react';
+import type { AuthUser } from '../../types/auth';
 
 interface SidebarProps {
   alertCount: number;
   onOpenCopilot: () => void;
+  user: AuthUser | null;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ alertCount, onOpenCopilot }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ alertCount, onOpenCopilot, user }) => {
+  const roleName = user?.role?.name ?? 'Operator';
+  const canViewAdministration = roleName === 'Admin' || roleName === 'Supervisor';
+
   const navLinks = [
     { to: '/', label: 'Overview', icon: LayoutDashboard },
     { to: '/live', label: 'Live Streams', icon: Camera },
@@ -32,11 +33,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ alertCount, onOpenCopilot }) =
     { to: '/prevention', label: 'Prevention Studio', icon: Sliders },
     { to: '/digital-twin', label: 'Digital Twin', icon: MapPin },
     { to: '/dna', label: 'Behaviour DNA', icon: Dna },
+    ...(canViewAdministration ? [{ to: '/session', label: 'Session', icon: Shield }] : []),
   ];
 
   return (
     <aside className="w-64 bg-[#0B0F17] border-r border-white/10 flex flex-col h-screen fixed left-0 top-0 z-30 select-none">
-      {/* Brand Header */}
       <div className="h-16 flex items-center px-6 border-b border-white/10 gap-3">
         <div className="w-9 h-9 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 glow-accent">
           <Shield className="w-5 h-5" />
@@ -51,7 +52,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ alertCount, onOpenCopilot }) =
         </div>
       </div>
 
-      {/* Navigation Menu */}
       <div className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         <div className="px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-gray-500">
           Command Operations
@@ -84,7 +84,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ alertCount, onOpenCopilot }) =
         })}
       </div>
 
-      {/* Grounded Copilot Launcher */}
       <div className="p-4 border-t border-white/10 bg-white/[0.02]">
         <button
           onClick={onOpenCopilot}
@@ -95,7 +94,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ alertCount, onOpenCopilot }) =
         </button>
       </div>
 
-      {/* System Status Footer */}
       <div className="p-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-gray-400">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 pulse-live" />
