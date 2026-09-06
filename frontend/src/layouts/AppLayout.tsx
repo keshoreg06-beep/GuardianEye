@@ -28,7 +28,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, clearSession } = useSessionStore();
-  const { sidebarCollapsed, toggleSidebar, selectedWarehouseId } = useAppStore();
+  const { sidebarCollapsed, toggleSidebar, selectedWarehouseId, connectionState } = useAppStore();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [copilotOpen, setCopilotOpen] = useState(false);
 
@@ -70,6 +70,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           user={user}
           onLogout={handleLogout}
           currentPage={currentPage}
+          connectionState={connectionState}
           onOpenCommandPalette={() => setCommandPaletteOpen(true)}
           sidebarCollapsed={sidebarCollapsed}
         />

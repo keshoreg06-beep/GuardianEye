@@ -28,7 +28,7 @@ Legend:
 | Replay of incidents | SUPPORTED | `backend/app/api/v1/replay.py` | Retrieval of incident replay details |
 | Storage operations | SUPPORTED | `backend/app/api/v1/storage.py` | Storage metadata and file operations |
 | Live camera streams | NOT SUPPORTED | router inspection + no stream endpoints in v1 router | No verified live streaming contract |
-| Real-time websocket update layer | NOT SUPPORTED | repo-wide route scan; no WebSocket usage found | No push-based event system observed |
+| Real-time websocket update layer | PARTIALLY SUPPORTED | `backend/app/api/v1/ws.py`, `backend/app/services/event_bus.py` | Minimal authenticated warehouse event stream exists for verified alert and incident state-change events |
 | Camera inventory / device management | PARTIALLY SUPPORTED | `digital_twin` includes camera topology, but no explicit management API | Camera metadata exists in spatial model, but full management API is not evidenced |
 | Notifications center / push notification service | NOT SUPPORTED | no push, pubsub, or notification route found | Not implemented in current backend repo |
 | Multi-version API evolution | UNKNOWN | `settings.API_V1_STR = "/api/v1"` only | Versioning is v1-only as implemented |

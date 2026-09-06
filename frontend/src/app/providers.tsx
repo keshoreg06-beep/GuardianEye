@@ -1,6 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { RealtimeSocketManager } from '../services/realtime';
+import { useAppStore } from '../stores/app-store';
+import { useSessionStore } from '../stores/session-store';
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -16,6 +19,26 @@ export function AppProviders({ children }: AppProvidersProps) {
       },
     },
   }));
+
+  const [manager] = useState(
+    () => new RealtimeSocketManager(
+      queryClient,
+      () => useSessionStore.getState().accessToken,
+      () => useAppStore.getState().selectedWarehouseId,
+      (state) => useAppStore.getState().setConnectionState(state),
+    ),
+  );
+
+  const accessToken = useSessionStore((state) => state.accessToken);
+  const selectedWarehouseId = useAppStore((state) => state.selectedWarehouseId);
+
+  useEffect(() => {
+    manager.connect();
+
+    return () => {
+      manager.disconnect();
+    };
+  }, [accessToken, manager, selectedWarehouseId]);
 
   return (
     <BrowserRouter>

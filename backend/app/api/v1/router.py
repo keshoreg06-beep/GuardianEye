@@ -19,6 +19,7 @@ from backend.app.api.v1 import (
     tracks,
     users,
     videos,
+    ws,
     zones,
 )
 
@@ -62,3 +63,4 @@ api_v1_router.include_router(
 api_v1_router.include_router(
     assistant.router, prefix="/assistant", tags=["Assistant Copilot"]
 )
+api_v1_router.include_router(ws.router, prefix="/ws", tags=["Realtime"])
