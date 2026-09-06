@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CopilotChatDrawer } from '../components/copilot/CopilotChatDrawer';
 import { Header } from '../components/layout/Header';
 import { Sidebar } from '../components/layout/Sidebar';
 import { useAppStore } from '../stores/app-store';
@@ -29,6 +30,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { user, clearSession } = useSessionStore();
   const { sidebarCollapsed, toggleSidebar, selectedWarehouseId } = useAppStore();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [copilotOpen, setCopilotOpen] = useState(false);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -53,7 +55,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="min-h-screen bg-[#0B0F17] text-gray-100 flex">
       <Sidebar
         alertCount={0}
-        onOpenCopilot={() => setCommandPaletteOpen(true)}
+        onOpenCopilot={() => setCopilotOpen(true)}
         user={user}
         collapsed={sidebarCollapsed}
         onToggleSidebar={toggleSidebar}
@@ -63,7 +65,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <div className="flex-1 flex flex-col min-h-screen transition-all duration-200" style={{ marginLeft: sidebarCollapsed ? '5rem' : '16rem' }}>
         <Header
           openAlertsCount={0}
-          onOpenCopilot={() => setCommandPaletteOpen(true)}
+          onOpenCopilot={() => setCopilotOpen(true)}
           onOpenAlertsModal={() => undefined}
           user={user}
           onLogout={handleLogout}
@@ -91,13 +93,17 @@ export function AppLayout({ children }: AppLayoutProps) {
                 ['Open Overview', '/'],
                 ['Open Live Streams', '/live'],
                 ['Open Incident Board', '/incidents'],
-                ['Ask AI Copilot', '/'],
+                ['Ask AI Copilot', 'copilot'],
               ].map(([label, route]) => (
                 <button
                   key={label}
                   type="button"
                   onClick={() => {
                     setCommandPaletteOpen(false);
+                    if (route === 'copilot') {
+                      setCopilotOpen(true);
+                      return;
+                    }
                     navigate(route);
                   }}
                   className="flex w-full items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-left hover:border-blue-500/40 hover:bg-blue-500/10"
@@ -110,6 +116,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
       )}
+
+      <CopilotChatDrawer isOpen={copilotOpen} onClose={() => setCopilotOpen(false)} />
     </div>
   );
 }

@@ -43,4 +43,19 @@ describe('application shell', () => {
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     expect(screen.getByRole('dialog', { name: /command palette/i })).toBeInTheDocument();
   });
+
+  it('opens the grounded copilot drawer from the app shell', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <AppLayout>
+          <div>Workspace Content</div>
+        </AppLayout>
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /ask copilot/i }));
+
+    expect(screen.getByText(/grounded ai copilot/i)).toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: /command palette/i })).not.toBeInTheDocument();
+  });
 });

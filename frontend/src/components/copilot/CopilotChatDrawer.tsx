@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import {
   ArrowRight,
-  BookOpen,
   Bot,
   CheckCircle2,
-  FileText,
   Loader2,
   Send,
   Sparkles,
@@ -50,7 +48,7 @@ export const CopilotChatDrawer: React.FC<CopilotChatDrawerProps> = ({ isOpen, on
       const resp = await GuardianAPI.queryAssistant(q);
       const botMsg: Message = {
         sender: 'assistant',
-        text: resp.answer,
+        text: resp.answer || 'I could not find verified evidence for that request in the warehouse records.',
         responseObj: resp,
       };
       setMessages((prev) => [...prev, botMsg]);
@@ -83,7 +81,7 @@ export const CopilotChatDrawer: React.FC<CopilotChatDrawerProps> = ({ isOpen, on
               </span>
             </div>
             <div className="text-[10px] font-mono text-gray-400">
-              Grounded in PostgreSQL & pgvector Logs
+              Verified incidents, risk assessments & SOP rules only
             </div>
           </div>
         </div>
@@ -129,6 +127,15 @@ export const CopilotChatDrawer: React.FC<CopilotChatDrawerProps> = ({ isOpen, on
             >
               {m.text}
 
+              {m.responseObj && (
+                <div className="mt-3 flex items-center gap-2 text-[9px] font-mono uppercase tracking-[0.18em]">
+                  <span className={`inline-flex items-center rounded border px-1.5 py-0.5 ${m.responseObj.is_grounded ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' : 'border-amber-500/30 bg-amber-500/10 text-amber-300'}`}>
+                    {m.responseObj.is_grounded ? 'Grounded' : 'Insufficient evidence'}
+                  </span>
+                  <span className="text-gray-400">Confidence {(m.responseObj.confidence * 100).toFixed(0)}%</span>
+                </div>
+              )}
+
               {/* Citations block */}
               {m.responseObj?.grounded_citations && m.responseObj.grounded_citations.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-white/10 space-y-2">
@@ -141,7 +148,7 @@ export const CopilotChatDrawer: React.FC<CopilotChatDrawerProps> = ({ isOpen, on
                       key={cIdx}
                       className="p-2 rounded bg-black/40 border border-white/5 text-[11px] space-y-0.5"
                     >
-                      <div className="font-semibold text-blue-300 flex items-center justify-between">
+                      <div className="font-semibold text-blue-300 flex items-center justify-between gap-2">
                         <span>{c.title}</span>
                         <span className="text-[9px] font-mono text-emerald-400">
                           {(c.confidence * 100).toFixed(0)}% MATCH
@@ -153,8 +160,14 @@ export const CopilotChatDrawer: React.FC<CopilotChatDrawerProps> = ({ isOpen, on
                 </div>
               )}
 
+              {!m.responseObj?.grounded_citations?.length && m.responseObj && (
+                <div className="mt-3 pt-3 border-t border-white/10 text-[10px] text-amber-300">
+                  This answer is limited to verified records. If the query cannot be matched to an incident, risk assessment, or SOP rule, the assistant will not invent a result.
+                </div>
+              )}
+
               {/* Suggested followups */}
-              {m.responseObj?.suggested_followups && (
+              {m.responseObj?.suggested_followups?.length ? (
                 <div className="mt-3 pt-2 border-t border-white/5 space-y-1">
                   <div className="text-[10px] text-gray-400">Suggested Inquiries:</div>
                   {m.responseObj.suggested_followups.map((f, fIdx) => (
@@ -168,7 +181,7 @@ export const CopilotChatDrawer: React.FC<CopilotChatDrawerProps> = ({ isOpen, on
                     </button>
                   ))}
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         ))}
