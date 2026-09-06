@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --color-background: #0b0f17;
+    --color-surface: #111827;
+    --color-card: rgba(17, 24, 39, 0.75);
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-strong: rgba(59, 130, 246, 0.35);
+    --color-text: #f3f4f6;
+    --color-text-muted: #9ca3af;
+    --color-accent: #3b82f6;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-critical: #f97316;
+  }
+}
