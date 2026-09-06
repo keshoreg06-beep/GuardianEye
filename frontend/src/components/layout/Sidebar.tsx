@@ -47,6 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { to: '/prevention', label: 'Prevention Studio', icon: Sliders },
     { to: '/digital-twin', label: 'Digital Twin', icon: MapPin },
     { to: '/dna', label: 'Behaviour DNA', icon: Dna },
+    { to: '/human-review', label: 'Human Review', icon: Shield },
     ...(canViewAdministration ? [{ to: '/session', label: 'Session', icon: Shield }] : []),
   ];
 

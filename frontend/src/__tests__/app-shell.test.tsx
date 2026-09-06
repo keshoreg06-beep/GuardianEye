@@ -58,4 +58,16 @@ describe('application shell', () => {
     expect(screen.getByText(/grounded ai copilot/i)).toBeInTheDocument();
     expect(screen.queryByRole('dialog', { name: /command palette/i })).not.toBeInTheDocument();
   });
+
+  it('exposes the human review workspace entry point', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <AppLayout>
+          <div>Workspace Content</div>
+        </AppLayout>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('link', { name: /human review/i })).toBeInTheDocument();
+  });
 });

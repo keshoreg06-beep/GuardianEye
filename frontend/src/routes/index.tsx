@@ -32,6 +32,9 @@ const DNAExplorerPage = lazy(() =>
 const AnalyticsPage = lazy(() =>
   import('../pages/AnalyticsPage').then((module) => ({ default: module.AnalyticsPage })),
 );
+const HumanReviewPage = lazy(() =>
+  import('../pages/HumanReviewPage').then((module) => ({ default: module.HumanReviewPage })),
+);
 
 export function AppRoutes() {
   return (
@@ -49,6 +52,7 @@ export function AppRoutes() {
         <Route path="/digital-twin" element={<ProtectedRoute><DigitalTwinPage /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
         <Route path="/dna" element={<ProtectedRoute><DNAExplorerPage /></ProtectedRoute>} />
+        <Route path="/human-review" element={<ProtectedRoute><HumanReviewPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Suspense>
